@@ -16,9 +16,11 @@ LIST_T* listCreate(int capacity)
  */
 void listDestroy(LIST_T* list)
 {
-    free(list->current);
-    free(list->head);
-    free(list->tail);
+  while(list->head != NULL) {
+    LISTNODE_T* temp = list->head;
+    list->head = temp->next;
+    free(temp); 
+  }
 }
 
 /* Returns the number of elements (could be zero)
@@ -26,7 +28,15 @@ void listDestroy(LIST_T* list)
  */
 int listSize(LIST_T* list)
 {
-  return list->
+  int count = 0;
+  list->current = list->head;
+  if(list->current == NULL)
+    return -1;
+  while(list->current != NULL) {
+    count++;
+    list->current = list->current->next;
+  }
+  return count;
 }
 
 /* Insert new element into the list at the specify index
@@ -36,7 +46,26 @@ int listSize(LIST_T* list)
  */
 int listInsertAt(LIST_T* list, int index, void* data)
 {
+  if(list == NULL) {
+    return -1;
+  }
+  if(listSize(list) >= index) {
+    return -2;
+  }
+  
+  int count = 0;
+  LISTNODE_T* prev;
+  list->current = list->head;
 
+  while(count == index) {
+    if(index - count == 1 )
+      prev = list->current;
+    list->current = list->current->next;    
+    count++;
+  }
+
+  LIST_T* head = list->current
+  ;
 }
 
 /* Add new element at the end of the list
