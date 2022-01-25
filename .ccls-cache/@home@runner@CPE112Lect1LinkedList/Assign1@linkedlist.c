@@ -54,18 +54,20 @@ int listInsertAt(LIST_T* list, int index, void* data)
   }
   
   int count = 0;
-  LISTNODE_T* prev;
+  LISTNODE_T* target, temp;
+
+  target->data = data;
   list->current = list->head;
 
-  while(count == index) {
-    if(index - count == 1 )
-      prev = list->current;
+  while(count < index) {
     list->current = list->current->next;    
     count++;
   }
+  temp = list->current->next;
+  target->next = temp;
+  list->current->next = target;
 
-  LIST_T* head = list->current
-  ;
+
 }
 
 /* Add new element at the end of the list
