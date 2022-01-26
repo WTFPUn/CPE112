@@ -30,7 +30,7 @@ int listSize(LIST_T* list)
 {
   int count = 0;
   list->current = list->head;
-  if(list->current == NULL)
+  if(list == NULL)
     return -1;
   while(list->current != NULL) {
     count++;
@@ -49,24 +49,24 @@ int listInsertAt(LIST_T* list, int index, void* data)
   if(list == NULL) {
     return -1;
   }
-  if(listSize(list) >= index) {
-    return -2;
-  }
   
   int count = 0;
-  LISTNODE_T* target, temp;
+  LISTNODE_T* target = (LISTNODE_T*) calloc(1, sizeof(LISTNODE_T));
 
   target->data = data;
-  list->current = list->head;
 
   while(count < index) {
-    list->current = list->current->next;    
+    if(count == 0 ){
+      list->current = list->head;
+    }
+    else {
+      list->current = list->current->next;  
+    }  
     count++;
   }
-  temp = list->current->next;
-  target->next = temp;
+  target->next = list->current->next;
   list->current->next = target;
-
+  return 1;
 
 }
 
@@ -126,7 +126,6 @@ int listRemoveAt(LIST_T* list, int index)
             previousNode = previousNode->next;
             i++;
         }
-
         nodeToBeRemove = previousNode->next;
         previousNode->next = nodeToBeRemove->next; 
         if (nodeToBeRemove == list->tail) 
@@ -144,7 +143,35 @@ int listRemoveAt(LIST_T* list, int index)
  */
 int listGet(LIST_T* list, int index, void** data)
 {
+    if(list == NULL)
+      return -1;
+    int cnt=0;
+    list->current = list->head;
+    while(list->current != NULL){
+      if(cnt==index){
+        break;
+      }
+      cnt++;
+      list->current = list->current->next;
+    }
+    *data = list->current->data;
+}
 
+
+
+/* Get the current element
+ * Return -1 if the list hasn't been created
+ *         1 if the operation is successful
+ */
+int listGetNext(LIST_T* list, void** data)
+{
+  if(list == NULL){
+      return -1;
+    }
+  if(list->current->next == NULL)
+    return 0;
+  *data = list->current->next->data; 
+  return 1;
 }
 
 /* Reset the current element return by listGetNext to 
@@ -153,17 +180,14 @@ int listGet(LIST_T* list, int index, void** data)
  *         1 if the operation is successful
  */
 int listReset(LIST_T* list)
-{
-
-}
-
-/* Get the current element
- * Return -1 if the list hasn't been created
- *         1 if the operation is successful
- */
-int listGetNext(LIST_T* list, void** data)
-{
-
+{ 
+  void* data;
+  
+  if(list == NULL)
+    return -1;
+  listGetNext(list, &data);
+  list->head = data;
+  return 1;
 }
 
 /* 
@@ -173,5 +197,10 @@ int listGetNext(LIST_T* list, void** data)
  */
 int listAtEnd(LIST_T* list)
 {
-
+  void* data;
+  if(list == NULL)
+    return -1;
+  if(listGetNext(list, &data))
+    return 0;
+  return 1;
 }

@@ -41,7 +41,8 @@ int main()
     listAppend(list, allocateHeapInt(10));
     listAppend(list, allocateHeapInt(12));
     listAppend(list, allocateHeapInt(13));
-    listInsertAt(list, 1, allocateHeapInt(11));
+    printf("%d", listInsertAt(list, 1, allocateHeapInt(11)));
+    // listInsertAt(list, 1, allocateHeapInt(11));
 
     // Print list content
     // > List contain : 10 11 12 13
